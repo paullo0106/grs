@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import csv
 import re
-import urllib2
+import urllib3
+from cStringIO import StringIO
 from datetime import datetime
 
 
@@ -9,7 +10,10 @@ NOW = datetime.now()
 SAVEPATH = '../grs/twse_list.csv'
 INDUSTRYCODE = '../grs/industry_code.csv'
 
-TWSEURL = 'http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX2_print.php?genpage=genpage/Report%(year)s%(mon)02d/A112%(year)s%(mon)02d%(day)02d%%s.php&type=csv' % {'year': NOW.year, 'mon': NOW.month, 'day': NOW.day}
+
+TWSE_HOST = 'http://www.twse.com.tw/'
+TWSEURL = '/ch/trading/exchange/MI_INDEX/MI_INDEX2_print.php?genpage=genpage/Report%(year)s%(mon)02d/A112%(year)s%(mon)02d%(day)02d%%s.php&type=csv' % {'year': NOW.year, 'mon': NOW.month, 'day': NOW.day}
+TWSE_CONNECTIONS = urllib3.connection_from_url(TWSE_HOST)
 TWSECLS = {'0049': u'封閉式基金',
            '0099P': u'ETF',
            '019919T': u'受益證券',
@@ -62,7 +66,9 @@ def fetch_twse_list():
         re_sub = re.compile(r'[^\w\d]')
 
         for no in TWSECLS:
-            for i in csv.reader(urllib2.urlopen(TWSEURL % no).readlines()):
+            data = TWSE_CONNECTIONS.urlopen('GET', TWSEURL % no).data
+            csv_files = csv.reader(StringIO(data))
+            for i in csv_files:
                 if len(i) >= 3 and re_pattern.match(i[0]):
                     pass
                 else:

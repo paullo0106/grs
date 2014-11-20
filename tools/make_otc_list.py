@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import csv
 import re
-import urllib2
+import urllib3
+from cStringIO import StringIO
 from datetime import datetime
 
 
@@ -9,7 +10,9 @@ NOW = datetime.now()
 SAVEPATH = '../grs/otc_list.csv'
 INDUSTRYCODE = '../grs/industry_code_otc.csv'
 
-OTCURL = 'http://www.gretai.org.tw/ch/stock/aftertrading/otc_quotes_no1430/stk_wn1430_download.php?d=%(year)s/%(mon)02d/%(day)02d&se=%%s&s=0,asc,0' % {
+OTC_HOST = 'http://www.gretai.org.tw/'
+OTC_CONNECTIONS = urllib3.connection_from_url(OTC_HOST)
+OTCURL = '/ch/stock/aftertrading/otc_quotes_no1430/stk_wn1430_download.php?d=%(year)s/%(mon)02d/%(day)02d&se=%%s&s=0,asc,0' % {
         'year': NOW.year - 1911,
         'mon': NOW.month,
         'day': NOW.day,}
@@ -66,7 +69,9 @@ def fetch_otc_list():
         re_sub = re.compile(r'[^\w\d]')
 
         for no in OTCCLS:
-            for i in csv.reader(urllib2.urlopen(OTCURL % no).readlines()):
+            data = OTC_CONNECTIONS.urlopen('GET', OTCURL % no).data
+            csv_files = csv.reader(StringIO(data))
+            for i in csv_files:
                 if len(i) >= 3 and re_pattern.match(i[0]):
                     pass
                 else:
