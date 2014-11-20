@@ -5,7 +5,7 @@ import urllib2
 from datetime import datetime
 
 
-NOW = datetime(2014, 2, 21)
+NOW = datetime.now()
 SAVEPATH = '../grs/otc_list.csv'
 INDUSTRYCODE = '../grs/industry_code_otc.csv'
 
@@ -85,8 +85,8 @@ def fetch_otc_list():
 
     with open(SAVEPATH, 'w') as files:
         csv_file = csv.writer(files)
-        #csv_file.writerow(['文件更新', datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'x', 'x'])
-        csv_file.writerow(['UPDATE', datetime.now().strftime('%Y/%m/%d'), 'x', 'x'])
+        #csv_file.writerow(['文件更新', NOW.strftime('%Y-%m-%d %H:%M:%S'), 'x', 'x'])
+        csv_file.writerow(['UPDATE', NOW.strftime('%Y/%m/%d'), 'x', 'x'])
         csv_file.writerow(['證期會代碼', '公司簡稱', '分類代碼', '分類名稱'])
         for i in sorted(all_items):
             csv_file.writerow(all_items[i])
