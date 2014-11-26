@@ -102,4 +102,3 @@ class TWSEOpen(object):
                 return True
             else:
                 return False
-
