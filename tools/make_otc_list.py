@@ -4,9 +4,10 @@ import re
 import urllib3
 from cStringIO import StringIO
 from datetime import datetime
+from grs import TWSEOpen
 
 
-NOW = datetime.now()
+NOW = TWSEOpen().latest_open_day(datetime.now())
 SAVEPATH = '../grs/otc_list.csv'
 INDUSTRYCODE = '../grs/industry_code_otc.csv'
 

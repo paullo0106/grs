@@ -22,6 +22,7 @@
 
 from .tw_time import TWTime
 from datetime import datetime
+from datetime import timedelta
 import csv
 import os
 
@@ -47,6 +48,21 @@ class TWSEOpen(object):
         else:
             pass
         return self.caldata(time)
+
+    def latest_open_day(self, latest_open, backward_check=True):
+        ''' 尋找離指定日期(包含當天)最近一天有開市的日期
+
+            :param datetime latest_open: 指定日期
+            :param boolean backward_check: True (default) - 從指定日期往前查找, False - 往後查找
+            :rtype: datetime
+            :returns: 離指定日期最近一天有開市的日期
+        '''
+        diff = -1 if backward_check else 1
+        is_open = self.d_day(latest_open)
+        while not is_open:  # continue moving the clock one day backward/forward to check
+            latest_open = latest_open + timedelta(days=diff)
+            is_open = self.d_day(latest_open)
+        return latest_open
 
     @staticmethod
     def __loaddate():
@@ -86,3 +102,4 @@ class TWSEOpen(object):
                 return True
             else:
                 return False
+
