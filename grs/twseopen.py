@@ -49,7 +49,7 @@ class TWSEOpen(object):
             pass
         return self.caldata(time)
 
-    def latest_open_day(self, latest_open, backward_check=True):
+    def recent_open_day(self, latest_open, backward_check=True):
         ''' 尋找離指定日期(包含當天)最近一天有開市的日期
 
             :param datetime latest_open: 指定日期

@@ -7,7 +7,7 @@ from datetime import datetime
 from grs import TWSEOpen
 
 
-NOW = TWSEOpen().latest_open_day(datetime.now())
+NOW = TWSEOpen().recent_open_day(datetime.now())
 SAVEPATH = '../grs/otc_list.csv'
 INDUSTRYCODE = '../grs/industry_code_otc.csv'
 
